@@ -82,5 +82,5 @@ roviding a seamless experience for administrators, instructors, and trainees.
     - Use version control for the project (e.g., Git).
     - Tag releases with version numbers.
 
-12. **API Integration (if applicable):**
+12. **API Integration:**
     - Integrate external APIs for additional functionality (payment gateways, external authentication, etc.).

@@ -1,0 +1,161 @@
+﻿@model CoursesManagementSystem.Models.Course
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<!-- Header-->
+<header class="bg-dark py-5">
+    <div class="container px-5">
+        <div class="row gx-5 align-items-center justify-content-center">
+            <div class="col-lg-8 col-xl-7 col-xxl-6">
+                <div class="course-categries d-flex align-items-center gap-1" style="color: palegoldenrod">
+
+                    @{
+                        var categories = ViewBag.catgories as List<CoursesManagementSystem.Models.Category>;
+                        int categoriesCount = categories.Count;
+                        foreach (var ParentCategory in categories)
+                        {
+                            <a><h5>@ParentCategory.Name</h5></a>
+                            if (--categoriesCount != 0)
+                            {
+                                <i class="fa fa-arrow-right"></i>
+                            }
+                        }
+                    }
+
+                </div>
+                <div class="my-5 text-center text-xl-start">
+                    <h1 class="display-5 fw-bolder text-white mb-2">@Model.Name</h1>
+                    <p class="lead fw-normal text-white-50 mb-4">@Model.Description</p>
+
+                    <p class="lead fw-normal text-white-50 mb-2 ">Taught By: @Html.ActionLink(Model.trainer.Name, "Search", "Course")</p>
+                    <p class="lead fw-normal text-white-50  ">Enrolled Trainnes: @Html.DisplayTextFor(m => Model.TraineesCount) students</p>
+                    <div class="rating mb-2" style="color:gold">
+                        @{
+                            double rating = 4.2;
+
+                            for (int i = 0; i < 5; i++)
+                            {
+
+                                if (rating >= 1)
+                                {
+                                    <span class="fa fa-star"></span>
+                                }
+                                else if (rating > 0)
+                                {
+                                    <span class="fa fa-star-half-full"></span>
+                                }
+                                else
+                                {
+                                    <span class="fa fa-star-o"></span>
+                                }
+                                rating--;
+                            }
+                        }
+                    </div>
+
+                    <p class="lead fw-normal text-white-50 mb-4">Created at : @Model.CreatedDate</p>
+                    <div class="d-grid gap-3 d-sm-flex justify-content-sm-center justify-content-xl-start">
+
+                        @Html.ActionLink("Enroll", "Enroll", "Course", new { Model.Id }, new { @class = "btn btn-outline-primary btn-lg px-4 me-sm-3" })
+                    </div>
+                </div>
+            </div>
+            <div class="col-xl-5 col-xxl-6 d-none d-xl-block text-center">
+                <img class="img-fluid rounded-3 my-5" src="~/Uploads/Courses/@Model.ImageUrl" style="max-height:30rem;" alt="@Model.Name" />
+            </div>
+        </div>
+    </div>
+</header>
+
+@if (Model.Prerequests != null)
+{
+    <!-- Course Content-->
+    <section class="py-5" id="features">
+        <div class="container px-5 my-5 ">
+                <h2 class="fw-bolder bg-white p-2 shadow  d-inline-block" style="border-radius:1.5rem">Prerequests</h2>
+            <div class="row gx-5 border shadow p-5 " style="margin-top:-1rem">
+
+                @foreach (var item in CoursesManagementSystem.Services.Utility.ParseString(Model.Prerequests))
+                {
+                    <h5><i class="fa fa-history text-black-50 m-3"></i> @item</h5>
+                }
+
+            </div>
+        </div>
+    </section> <!-- Course Content-->
+}
+
+
+@if (Model.Promises != null)
+{
+    <!-- Features section-->
+    <section class="py-5" id="features">
+        <div class="container px-5 my-5">
+            <div class="row gx-5">
+                <div class="col-lg-4 mb-5 mb-lg-0">
+                <h2 class="fw-bolder bg-white p-2 shadow  d-inline-block" style="border-radius:1.5rem">What you'll learn</h2>
+                </div>
+                <div class="col-lg-8">
+                    <div class="row gx-5 row-cols-1 row-cols-md-2 mt-4 p-5 border shadow">
+
+                        @foreach (var promise in CoursesManagementSystem.Services.Utility.ParseString(Model.Promises))
+                        {
+                            <div class="col mb-1 h-100">
+                                <h3 class=""><i class="fa fa-bolt text-black-50 m-4"></i>@promise</h3>
+                            </div>
+                        }
+
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<section class="py-5" id="features">
+    <div class="container px-5 my-5">
+        <div class="row gx-5">
+            <div class="col-lg-4 mb-5 mb-lg-0">
+                <h2 class="fw-bolder bg-white p-2 shadow  d-inline-block m-4" style="border-radius:1.5rem">Course Lessons</h2>
+                </div>
+                @foreach (var sec in Model.Sections)
+                {
+                    <div id="accordion5" class="according accordion-s2 gradiant-bg">
+                        <div class="card">
+                            <div class="card-header">
+                                <a class="card-link collapsed d-flex justify-content-between" data-toggle="collapse" href="#accordion51" aria-expanded="false">
+                                    <h5>@sec.Name</h5>
+                                    <div class="info d-flex justify-content-between gap-4" style="margin-right:4rem">
+                                        <h6 class="text-white">@sec.Lessons.Count Lessons</h6>
+                                        <h6 class="text-white">@sec.Lessons.Sum(l => l.Duration) Duration</h6>
+                                    </div>
+                                </a>
+                            </div>
+
+                            <div id="accordion51" class="collapse" data-parent="#accordion5" style="">
+                                <div class="card-body">
+
+                                    <ul class="list-group">
+
+                                        @foreach (var lesson in sec.Lessons)
+                                        {
+                                            <li class="list-group-item d-flex justify-content-between align-items-center" style=" font-weight: 600;">
+                                                @lesson.Title
+                                                <span class="badge badge-primary badge-pill" style="background: #00acc1; ">@lesson.Duration </span>
+                                            </li>
+
+                                        }
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                }
+            </div>
+        </div>
+</section>

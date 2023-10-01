@@ -1,0 +1,54 @@
+﻿@model CoursesManagementSystem.Models.Course
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Attribute</th>
+                <th>Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th>Course Name</th>
+                <td>@Html.DisplayFor(model => model.Name)</td>
+            </tr>
+            <tr>
+                <th>Trainer</th>
+                <td>@Html.DisplayFor(model => model.trainer.Name)</td>
+            </tr>
+            <tr>
+                <th>Category</th>
+                <td>@Html.DisplayFor(model => model.category.Name)</td>
+            </tr>
+            <tr>
+                <th>Description</th>
+                <td>@Html.DisplayFor(model => model.Description)</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>@Html.DisplayFor(model => model.CreatedDate)</td>
+            </tr>
+            @if (Model.ImageUrl != null)
+            {
+                <tr>
+                    <th>Image</th>
+                    <td>
+                        <img src="~/Uploads/Courses/@Model.ImageUrl" class="w-25" />
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

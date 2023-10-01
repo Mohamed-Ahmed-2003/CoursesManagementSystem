@@ -1,0 +1,93 @@
+﻿@model CoursesManagementSystem.Models.Section
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Section</h4>
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseId)
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.CourseId)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayName("Lessons Count")
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Lessons.Count)
+            </td>
+        </tr
+
+           <tr>
+            <th>
+                @Html.DisplayName("Duration")
+            </th>
+            <td>
+                <p>@Model.Lessons.Sum(l=>l.Duration) </p>
+            </td>
+        </tr>
+    </table>
+
+    <h4>Lessons</h4>
+    <hr />
+    <ul class="list-group">
+        @Html.ActionLink("Add Lesson", "Create", "Lesson", new { id = Model.Id }, null)
+        @foreach (var lesson in Model.Lessons)
+        {
+            <li class="list-group-item">
+                <table class="table">
+                    <tr>
+                        <th>
+                            Title
+                        </th>
+                        <td>
+                            @lesson.Title
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Duration
+                        </th>
+                        <td>
+                            @lesson.Duration duration
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Order
+                        </th>
+                        <td>
+                            @lesson.OrderNumber
+                        </td>
+                    </tr>
+                </table>
+
+                <div>
+                    @Html.ActionLink("Edit", "Edit", "Lesson", new { id = lesson.Id }, null) |
+                    @Html.ActionLink("Delete", "Delete", "Lesson", new { id = lesson.Id }, null)
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>

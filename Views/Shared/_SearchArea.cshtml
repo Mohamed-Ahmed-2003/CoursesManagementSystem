@@ -1,0 +1,22 @@
+﻿<div class="search-box pull-left mr-3">
+    <form action="/Utility/Search" method="get">
+        <input type="text" name="input" placeholder="Search for anything..." required>
+        <i class="ti-search"></i>
+    </form>
+</div>
+@if (ViewBag.Search != null)
+{
+    using (Html.BeginForm("Sort", "Course", FormMethod.Get, new { name = "SortForm", Style = "width:fit-content" }))
+    {
+
+
+        @Html.Hidden("input", $"{ViewBag.Search}");
+
+        <div class="dropdown align-items-center d-flex">
+            <h6>Sort By</h6>
+            @Html.DropDownList("sortType", CoursesManagementSystem.Controllers.UtilityController.GetSortTypes() as SelectList, new { @class = "btn btn-primary dropdown-toggle form-control p-2 ml-2", id = "sortDropdown" })
+        </div>
+    }
+}
+
+ </div>

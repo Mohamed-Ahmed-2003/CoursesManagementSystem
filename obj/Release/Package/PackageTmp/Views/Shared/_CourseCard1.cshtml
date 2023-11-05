@@ -1,0 +1,50 @@
+﻿@model  IEnumerable<CoursesManagementSystem.Models.Course>
+<div id="cards_landscape_wrap-2">
+    <div class="container">
+        <div class="row">
+            @foreach (var course in Model)
+            {
+                <div class="col-xs-12 col-sm-6 col-md-3 col-lg-3">
+                    <a href="/Course/Details/@course.Id">
+                        <div class="card-flyer">
+                            <div class="text-box">
+                                <div class="image-box">
+
+                                    <img src="~/uploads/courses/@course.ImageUrl" alt="Course Image" />
+                                </div>
+                                <div class="text-container">
+                                    <h6>@course.Name</h6>
+                                    <p>@course.Description</p>
+                                </div>
+                                    <span class="text-black-50 "><b>@course.EnrolledTrainees </b> Enrolled Students</span>
+                                <div class="mb-5" style="color:gold">
+
+                                    @{
+
+                                        for (int i = 0; i < 5; i++)
+                                        {
+
+                                            if (course.Rating - i >= 1)
+                                            {
+                                                <span class="fa fa-star"></span>
+                                            }
+                                            else if (course.Rating - i > 0)
+                                            {
+                                                <span class="fa fa-star-half-full"></span>
+                                            }
+                                            else
+                                            {
+                                                <span class="fa fa-star-o"></span>
+                                            }
+                                        }
+                                <span class="text-black-50 "> @Math.Round(course.Rating,1) <b>Rating</b></span>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    </div>
+</div>

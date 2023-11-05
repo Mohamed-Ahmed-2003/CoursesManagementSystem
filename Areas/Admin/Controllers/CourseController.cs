@@ -64,8 +64,10 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
 
         public ActionResult Edit(int Id)
         {
-            var model = new CourseCreateViewModel();
-            model.course = courseService.GetCourse(Id);
+            var model = new CourseCreateViewModel
+            {
+                course = courseService.GetCourse(Id)
+            };
             if (model.course is null) 
                 return HttpNotFound();
 
@@ -105,6 +107,18 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
             FillModelForView(ref model);
             return View(model);
         }
+
+        public ActionResult Delete(int id)
+        {
+            return View(courseService.GetCourse(id));
+        }
+        public ActionResult DeleteConfirmed(int id)
+        {
+
+            courseService.Delete(id);
+
+            return RedirectToAction("Index");
+        }
         public ActionResult Details (int Id)
         {
             var course = courseService.GetCourse(Id);
@@ -112,7 +126,6 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
                 return HttpNotFound();
             return View(course);
         }
-        
         private string SaveImage (HttpPostedFileBase ImageFile ,  string OldImageUrl = null)
         {
 
@@ -140,8 +153,6 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
         {
             return View("Index",courseService.SearchCourses(input));
         }
-
-
-    }
+          }
 
 }

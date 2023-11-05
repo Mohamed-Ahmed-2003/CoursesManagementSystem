@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
+using CoursesManagementSystem.ViewModels;
 
 namespace CoursesManagementSystem.Services
 {
@@ -22,21 +23,13 @@ namespace CoursesManagementSystem.Services
     {
         private static readonly CategoryService categoryService = new CategoryService();
         private static List<Category> cachedCategories;
+      
 
         public static List<Category> GetCategories()
         {
-            if (cachedCategories == null)
-            {
-                // Data is not in cache, so fetch it from the database
-                cachedCategories = categoryService.ReadAll();
+           
 
-                // Cache the data for a specified duration (e.g., 15 minutes)
-                var cacheDuration = TimeSpan.FromMinutes(60);
-                CacheItemPolicy policy = new CacheItemPolicy { AbsoluteExpiration = DateTimeOffset.Now.Add(cacheDuration) };
-                MemoryCache.Default.Add("CategoriesCacheKey", cachedCategories, policy);
-            }
-
-            return cachedCategories;
+            return categoryService.ReadAll();
         }
   
         
@@ -54,12 +47,27 @@ namespace CoursesManagementSystem.Services
 
         public static string[] ParseString(string promises)
         {
-          
+            if (string.IsNullOrEmpty(promises)) return new string[0] ;
             string[] words = promises.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
             return words;
         }
 
+        public static string CalcDuration (int minutes)
+        {
+            var duration = TimeSpan.FromMinutes(minutes);
 
+            int Hours = duration.Hours;
+            int Minutes= duration.Minutes;
+
+            if (Hours > 0 && minutes > 0)
+                return $"{Hours} H : {Minutes} M";
+            else if (Minutes > 0)
+                return $"{Minutes} M";
+
+                return $"{Hours} H";
+
+        }
     }
+
 }

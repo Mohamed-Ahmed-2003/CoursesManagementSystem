@@ -49,9 +49,17 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
             }
             return View(lesson);
         }
-        public ActionResult Delete (int Id)
+        public ActionResult Details (int Id)
         {
             return View(_lessonService.GetLesson(Id));
+        
+        
+        } public ActionResult Delete (int Id)
+        {
+            var lesson = _lessonService.GetLesson(Id);
+            _lessonService.Remove(lesson);
+
+            return RedirectToAction("index", "Section", new { Id = lesson.SectionId });
         }
 
 

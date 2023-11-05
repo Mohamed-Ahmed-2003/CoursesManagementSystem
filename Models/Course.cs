@@ -17,8 +17,10 @@ namespace CoursesManagementSystem.Models
         public string Description { get; set; }
         [Required]
         public DateTime CreatedDate { get; set; }
-        public int CategoryId { get; set; }
-        public int Rating {  get; set; }
+        public int? CategoryId { get; set; }
+        public double Rating {  get; set; }
+        public int EnrolledTrainees {  get; set; }
+        public int Reviewers {  get; set; }
 
         public string Promises { get; set; }
         public string Topics { get; set; }
@@ -35,20 +37,17 @@ namespace CoursesManagementSystem.Models
             }
             set
             {
-                imageUrl = (value == null) ? "no-image.png" : value;
+                imageUrl = value ?? "no-image.png";
             }
         }
-        
-        [DefaultValue(0)]
-        public int TraineesCount { get; set; }
+
 
         [ForeignKey("TrainerId")]
-        public virtual Trainer  trainer { get; set; }
+        public virtual Trainer  Trainer { get; set; }
         [ForeignKey("CategoryId")]
-        public virtual Category category { get; set; }
+        public virtual Category Category { get; set; }
 
         public virtual ICollection<Section> Sections { get; set; }
-        public virtual ICollection<Trainee> Trainees{ get; set; }
 
     }
 }

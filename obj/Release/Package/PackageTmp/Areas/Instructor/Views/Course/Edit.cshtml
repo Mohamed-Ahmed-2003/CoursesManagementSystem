@@ -1,0 +1,129 @@
+﻿@model CoursesManagementSystem.ViewModels.CourseCreateViewModel
+
+@{
+    ViewBag.Title = "Edit";
+
+}
+
+
+
+@using (Html.BeginForm("Edit", "course", FormMethod.Post, new { enctype = "multipart/form-data", id = "editCourseForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="d-flex flex-wrap">
+        <div class="form-horizontal" style="width:70%">
+            <h4>Course</h4>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            <div class="form-group">
+                @Html.LabelFor(model => model.course.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.course.Name, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.course.Name, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.HiddenFor(model => model.course.Id)
+
+                @Html.HiddenFor(model => model.course.CreatedDate)
+
+                @Html.HiddenFor(model => model.course.ImageUrl)
+            </div>
+
+
+
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.course.CategoryId, "CategoryId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.DropDownListFor(model => model.course.CategoryId, Model.Categories, new { @class = "form-control p-1" })
+
+                    @Html.ValidationMessageFor(model => model.course.CategoryId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.course.TrainerId, "Trainer", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.DropDownListFor(model => model.course.TrainerId, Model.Trainers, new { @class = "form-control p-1" })
+
+                    @Html.ValidationMessageFor(model => model.course.TrainerId, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(model => model.course.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-12">
+                    @Html.EditorFor(model => model.course.Description, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.course.Description, "", new { @class = "text-danger" })
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-12">
+                    <input type="button" onclick="showEditConfirmation()" value="Update" class="btn btn-success" />
+                </div>
+
+                @if (@ViewBag.ErrorMessage != null)
+                {
+                    <div class="alert alert-danger">
+                        <h3>@ViewBag.ErrorMessage</h3>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="form-horizontal border-left align-self-center" style="width:30%">
+            <div class="form-group">
+                @Html.Label("Image", htmlAttributes: new { @class = "control-label col-md-2" })
+
+                <div class="col-md-12">
+                    @if (@Model?.course?.ImageUrl != null)
+                    {
+                        <img id="previewImage" src="~/Uploads/Courses/@Model.course.ImageUrl" />
+                    }
+                    else
+                    {
+                        <img id="previewImage" src="~/Uploads/Courses/no-image.png" />
+
+                    }
+                </div>
+
+                <div class="col-md-12">
+                    <div class="custom-file">
+                        <input type="file" onchange="displayImage(this)" class="custom-file-input" style="cursor:pointer" id="ImageFile" name="ImageFile">
+                        <label class="custom-file-label" for="ImageFile">Upload an Image</label>
+                    </div>
+                    @Html.ValidationMessageFor(model => model.ImageFile, "", new { @class = "text-danger" })
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    function showEditConfirmation() {
+        bootbox.confirm({
+            message: 'Are you sure you want to save updates?',
+            buttons: {
+                confirm: {
+                    label: 'Yes',
+                    className: 'btn-success'
+                },
+                cancel: {
+                    label: 'No',
+                    className: 'btn-danger'
+                }
+            },
+            callback: function (result) {
+                if (result) {
+                    document.getElementById('editCourseForm').submit();
+                }
+            }
+        });
+    }
+</script>

@@ -56,7 +56,7 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
             {
                 return View("Index");
             }
-            var mainCategoriesList = categoryService.ReadAll().Where(c=>c.Id != id).ToList();
+            var mainCategoriesList = categoryService.ReadAll().Where(c=>c.Id != id)?.ToList();
 
             mainCategoriesList.Insert(0, null);
 
@@ -74,7 +74,7 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
              if (!succes)
                 {
                     ViewBag.Message = "This Category Name already exists";
-                    var mainCategoriesList = categoryService.ReadAll().Where(c => c.Id != category.Id).ToList();
+                    var mainCategoriesList = categoryService.ReadAll().Where(c => c.Id != category.Id)?.ToList();
 
                     mainCategoriesList.Insert(0, null);
 

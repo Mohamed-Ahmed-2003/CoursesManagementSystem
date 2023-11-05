@@ -1,0 +1,143 @@
+﻿@model CoursesManagementSystem.Models.Section
+
+@{
+    ViewBag.Title = "Details";
+}
+
+
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id },new {@class = "m-2 btn btn-warning"})
+    <hr />
+    <table class="table">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CourseId)
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.CourseId)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Name)
+            </td>
+        </tr>
+        <tr>
+            <th>
+                @Html.DisplayName("Lessons Count")
+            </th>
+            <td>
+                @Html.DisplayFor(model => model.Lessons.Count)
+            </td>
+        </tr>
+
+        <tr>
+            <th>
+                @Html.DisplayName("Duration")
+            </th>
+            <td>
+                <p>@CoursesManagementSystem.Services.Utility.CalcDuration(Model.Lessons.Sum(l => l.Duration))</p>
+            </td>
+        </tr>
+    </table>
+
+    <h4>Lessons</h4>
+    <hr />
+        @Html.ActionLink("Add Lesson", "Create", "Lesson", new { id = Model.Id },new { @class = "m-2 btn btn-success" })
+    <ul class="list-group">
+        @foreach (var lesson in Model.Lessons)
+        {
+            <li id="@lesson.Id"  class="list-group-item">
+                <table class="table">
+                    <tr >
+                        <th>
+                            Title
+                        </th>
+                        <td>
+                            @lesson.Title
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Duration
+                        </th>
+                        <td>
+                            @CoursesManagementSystem.Services.Utility.CalcDuration(lesson.Duration)
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>
+                            Order
+                        </th>
+                        <td>
+                            @lesson.OrderNumber
+                        </td>
+                    </tr>
+                </table>
+
+                <div>
+                    @Html.ActionLink("Edit", "Edit", "Lesson", new { id = lesson.Id }, null) |
+                    <a href="javascript:;" onclick="showDeleteConfirmation(@lesson.Id)" style="color: red; font-size: 1.5rem;" class="fa fa-trash"></a>
+
+                </div>
+            </li>
+        }
+    </ul>
+</div>
+<p>
+   
+    @Html.ActionLink("Back to List", "Index", new { Id = Model.CourseId })
+</p>
+
+@section scripts {
+    <script>
+
+        function showDeleteConfirmation(LessonID) {
+            bootbox.confirm({
+                message: 'Are you sure you want to delete the Lesson?',
+                buttons: {
+                    confirm: {
+                        label: 'Yes',
+                        className: 'btn-success'
+                    },
+                    cancel: {
+                        label: 'No',
+                        className: 'btn-danger'
+                    }
+                },
+                callback: function (result) {
+                    if (result) {
+                        handleLessonDeletion(LessonID);
+                    }
+                }
+            });
+        }
+        function handleLessonDeletion(LessonID) {
+            fetch('@Url.Action("Remove", "Lesson")/' + LessonID, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json; charset=utf-8'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Assuming you want to remove the entire row
+            var row = document.getElementById(LessonID);
+            row.parentNode.removeChild(row);
+        } else {
+            alert(data.message || 'An error occurred while deleting the course. Please try again.');
+        }
+    })
+    .catch(error => {
+        console.error('An error occurred while deleting the course:', error);
+        alert('An error occurred while deleting the course. Please try again.');
+    });
+}
+    </script>
+    
+    }

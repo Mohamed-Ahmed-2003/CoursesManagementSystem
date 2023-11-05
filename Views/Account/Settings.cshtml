@@ -1,0 +1,223 @@
+﻿@model CoursesManagementSystem.ViewModels.UpdateAccountViewModel
+
+@{
+    ViewBag.Title = "AccountSettings";
+}
+<style>
+    .profile-img {
+        text-align: center;
+    }
+
+        .profile-img img {
+            width: 70%;
+            height: 100%;
+        }
+
+
+        .profile-img .file {
+            position: relative;
+            overflow: hidden;
+            width: 70%;
+            font-size: 1.1rem;
+        }
+
+            .profile-img .file input {
+                position: absolute;
+                height: 100%;
+                width: 100%;
+                left: 0;
+                top: 0;
+                opacity: 0;
+                cursor: pointer;
+            }
+</style>
+
+
+<div class="container rounded mb-5">
+    @using (Html.BeginForm("UpdateAccount", "Account", FormMethod.Post, new { @class = "row bg-white justify-content-center p-5" ,
+                  id = "AccUpdateFrm" }))
+    {
+        @Html.AntiForgeryToken()
+        <div class="d-md-flex">
+            <div class="nav flex-column nav-pills mr-4 mb-3 mb-sm-0" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                <a class="nav-link active" id="v-pills-profile-picture-tab" data-toggle="pill" href="#v-pills-profile-picture" role="tab" aria-controls="v-pills-profile-picture" aria-selected="true">Profile Picture</a>
+                <a class="nav-link" id="v-pills-personal-info-tab" data-toggle="pill" href="#v-pills-personal-info" role="tab" aria-controls="v-pills-personal-info" aria-selected="false">Personal Info</a>
+                <a class="nav-link" id="v-pills-change-password-tab" data-toggle="pill" href="#v-pills-change-password" role="tab" aria-controls="v-pills-change-password" aria-selected="false">Change Password</a>
+                <!-- Save Profile Button -->
+                <div class="row mt-5 text-center">
+                    <button class="btn btn-success profile-button m-2  update-acc-btn" type="submit"  >Save Profile</button>
+                </div>
+            </div>
+            <div class="tab-content" id="v-pills-tabContent">
+                <!-- Profile Picture Tab -->
+                <div class="tab-pane fade show active" id="v-pills-profile-picture" role="tabpanel" aria-labelledby="v-pills-profile-picture-tab">
+
+                    <div class="profile-img">
+                        <img class="rounded-circle " style="width:250px;height:250px" src="https://st3.depositphotos.com/15648834/17930/v/600/depositphotos_179308454-stock-illustration-unknown-person-silhouette-glasses-profile.jpg">
+                        <div class="file btn btn-lg btn-secondary mb-2 "> Change Photo <input type="file" name="file" /></div>
+                    </div>
+
+                </div>
+
+                <!-- Personal Info Tab -->
+                <div class="tab-pane fade p-5 " id="v-pills-personal-info" role="tabpanel" aria-labelledby="v-pills-personal-info-tab">
+              
+                        @Html.HiddenFor(m => m.Id)
+                        <div class="">
+                            @Html.LabelFor(t => t.Name, new { @class = "labels" })
+                            @Html.TextBoxFor(t => t.Name, new { @class = "form-control" })
+                        </div>
+
+                        <div class="">
+                            @Html.LabelFor(t => t.IdentityUpdate.Email, new { @class = "labels" })
+                            @Html.TextBoxFor(t => t.IdentityUpdate.Email, new { @class = "form-control" })
+                            @Html.ValidationMessageFor(t => t.IdentityUpdate.Email, "", new { @class = "text-danger" })
+
+                        </div>
+                        @if (User.IsInRole("Trainer"))
+                        {
+                            <div>
+                                @Html.LabelFor(m => m.Description, new { @class = "labels" })
+                                @Html.TextBoxFor(m => m.Description, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Description, "", new { @class = "text-danger" })
+
+                            </div> 
+                            
+                            <div>
+                                @Html.LabelFor(m => m.Expertise, new { @class = "labels" })
+                                @Html.TextBoxFor(m => m.Expertise, new { @class = "form-control" })
+                                @Html.ValidationMessageFor(m => m.Expertise, "", new { @class = "text-danger" })
+
+                            </div>
+                       
+                    <!-- SocialLinks -->
+                        
+                <div class="form-group ">
+                    @Html.LabelFor(model => model.SocialLinks, htmlAttributes: new { @class = "control-label col-md-2" })
+
+                    <div id="SocialLinksContainer" class="col-md-10 w-100">
+                       
+                            @if (!string.IsNullOrEmpty(Model.SocialLinks))
+                            {
+                                foreach (string url in CoursesManagementSystem.Services.Utility.ParseString(Model.SocialLinks))
+                                {
+                                    <div class="input-group">
+                                        <input type="text" value="@url" name="SocialLinks" required class="form-control w-100 SocialLink-input">
+                                        <i class="fa fa-times text-danger remove-icon position-absolute" style="right: 8px; top: 8px; cursor: pointer;" onclick="removeSocialLink(this)"></i>
+                                    </div>
+                                }
+                            }
+               
+                    </div>
+
+
+                </div>
+                        
+                            <div class="input-group-append">
+                                <button type="button" class="btn btn-outline-secondary w-100" onclick="addInput('SocialLinksContainer','SocialLinks','SocialLink-input')">Add  SocialLink</button>
+                            </div>
+ 
+                    }
+                </div>
+
+                <!-- Change Password Tab -->
+                <div class="tab-pane fade p-5" id="v-pills-change-password" role="tabpanel" aria-labelledby="v-pills-change-password-tab">
+                    <div>
+                        <h5 class="text-right mb-2 text-black-50">Change Password</h5>
+                        @Html.LabelFor(t => t.IdentityUpdate.ChangePassword.CurrentPassword, new { @class = "labels" })
+                        @Html.PasswordFor(t => t.IdentityUpdate.ChangePassword.CurrentPassword, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(t => t.IdentityUpdate.ChangePassword.CurrentPassword, "", new { @class = "text-danger d-block" })
+
+                        @Html.LabelFor(t => t.IdentityUpdate.ChangePassword.NewPassword, new { @class = "labels" })
+                        @Html.PasswordFor(t => t.IdentityUpdate.ChangePassword.NewPassword, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(t => t.IdentityUpdate.ChangePassword.NewPassword, "", new { @class = "text-danger d-block" })
+
+                        @Html.LabelFor(t => t.IdentityUpdate.ChangePassword.ConfirmNewPassword, new { @class = "labels" })
+                        @Html.PasswordFor(t => t.IdentityUpdate.ChangePassword.ConfirmNewPassword, new { @class = "form-control" })
+                        @Html.ValidationMessageFor(t => t.IdentityUpdate.ChangePassword.ConfirmNewPassword, "", new { @class = "text-danger d-block" })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    }
+</div>
+
+<script>
+    function addInput(containerId, input_name, input_class) {
+        const container = document.getElementById(containerId);
+
+        // Check the number of existing input elements
+        const inputCount = container.querySelectorAll('.input-group').length;
+
+        // Only add a new input if the count is less than 5
+        if (inputCount < 5) {
+            const inputContainer = document.createElement('div');
+            inputContainer.className = 'input-group mb-2 position-relative'; // Added position-relative class
+
+            const input = document.createElement("input");
+            input.type = "text";
+            input.name = input_name;
+            input.required = true;
+            input.className = "form-control w-100 " + input_class;
+
+            inputContainer.appendChild(input);
+
+            // Add the Font Awesome remove icon inside the input container
+            const removeIcon = document.createElement('i');
+            removeIcon.className = 'fa fa-times text-danger remove-icon position-absolute'; // Added position-absolute class
+            removeIcon.style.right = '8px'; // Adjust the right position as needed
+            removeIcon.style.top = '8px'; // Adjust the top position as needed
+            removeIcon.onclick = function () {
+                // Remove the input container when the remove icon is clicked
+                container.removeChild(inputContainer);
+            };
+
+            inputContainer.appendChild(removeIcon);
+
+            // Append the input container to the main container
+            container.appendChild(inputContainer);
+        }
+    }
+
+    // Function to remove a social link
+    function removeSocialLink(element) {
+        const container = element.closest('.input-group');
+        container.remove();
+    }
+
+
+    function removeSocialLink(icon) {
+        // Get the parent div containing the input and icon
+        const inputContainer = icon.parentNode;
+        
+        // Remove the input container from the DOM
+        inputContainer.parentNode.removeChild(inputContainer);
+    }
+    
+    function PrepareInputs() {
+        const socialLinks = document.querySelectorAll('.SocialLink-input');
+        if (socialLinks.length == 0) return;
+        const socialLinksArray = Array.from(socialLinks).map(input => input.value.trim()).filter(Boolean);
+        const socialLinksJoined = socialLinksArray.join(',');
+        document.querySelector('[name ="SocialLinks"]').value = socialLinksJoined;
+        console.log(socialLinksJoined);
+    }
+
+    const Update_Account_btn = document.querySelector(".update-acc-btn");
+
+    Update_Account_btn.addEventListener("click", e => {
+        e.preventDefault();
+  
+            PrepareInputs();
+   
+
+       document.getElementById('AccUpdateFrm').submit();
+
+    })
+</script>
+
+@section  Scripts {
+    @Scripts.Render("~/Bundles/jqueryval")
+}

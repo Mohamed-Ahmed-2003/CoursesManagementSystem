@@ -19,6 +19,5 @@ namespace CoursesManagementSystem.Models
         public DateTime AddedDate { get; set; }
         bool IsActive { get; set; }
 
-        public virtual ICollection<Course> Course { get; set; }
     }
 }

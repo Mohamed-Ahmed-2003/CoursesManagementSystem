@@ -31,7 +31,8 @@ namespace CoursesManagementSystem.Services
         public Trainee GetTraineeById(int id)
         {
             return context.Trainees.Find(id);
-        }
+        } 
+        
 
         public bool IsEmailExisted(string email)
         {

@@ -24,58 +24,81 @@ namespace CoursesManagementSystem.Services.Interfaces
 
         public void Delete(int Id)
         {
-            throw new NotImplementedException();
+            context.Courses.Remove(GetCourse(Id));
+            context.SaveChanges();
         }
 
         public Course GetCourse(int id)
         {
-            return context.Courses.Include(c=>c.Sections).FirstOrDefault(c=>c.Id == id);
+            var course = context.Courses.Include(c => c.Sections).FirstOrDefault(c => c.Id == id);
+            return course;
         } 
         public IEnumerable<Course> SearchCourses(string input)
         {
             
-            return context.Courses.Include(c=>c.trainer)
+            return context.Courses.Include(c=>c.Trainer)
                                   .Where(c=>c.Name.Contains(input) || 
-                                        c.trainer.Name.Contains(input)||
-                                        c.category.Name.Contains(input));
+                                        c.Trainer.Name.Contains(input)||
+                                        c.Category.Name.Contains(input) ||
+                                        (c.Category.ParentCategory != null && c.Category.ParentCategory.Name.Contains(input))
+                                        ).ToList();
         }
 
         public IEnumerable<Course> Sort(string input, SortType sortType)
         {
             IQueryable<Course> CoursesQuery = context.Courses.Where(c => input == null ||
                                                         c.Name.Contains(input) ||
-                                                        c.trainer.Name.Contains(input) ||
-                                                        c.category.Name.Contains(input));
+                                                        c.Trainer.Name.Contains(input) ||
+                                                        c.Category.Name.Contains(input) ) ;
 
-            IEnumerable<Course> FilterdCourses = new List<Course>();
+            IEnumerable<Course> FilteredCourses = new List<Course>();
 
             switch (sortType) {
 
                 case SortType.MostTrainees:
+                    FilteredCourses = CoursesQuery
+                        .GroupJoin(
+                            context.TraineeCourses,
+                            course => course.Id,
+                            traineeCourse => traineeCourse.CourseID,
+                            (course, traineeCourses) => new
+                            {
+                                Course = course,
+                                TraineeCount = traineeCourses.Count()
+                            })
+                        .OrderByDescending(result => result.TraineeCount)
+                        .Select(result => result.Course)
+                        .ToList();
 
-                FilterdCourses = CoursesQuery.OrderByDescending(c => c.TraineesCount);
                     break;
 
+
                 case SortType.Newest:
-                  FilterdCourses = CoursesQuery.OrderByDescending(c => c.CreatedDate);
+                    FilteredCourses = CoursesQuery.OrderByDescending(c => c.CreatedDate);
+                    break;
+                case SortType.HighestRated:
+                    FilteredCourses = CoursesQuery.OrderByDescending(c => c.Rating);
+                    break;
+                case SortType.MostReviewed:
+                    FilteredCourses = CoursesQuery.OrderByDescending(c => c.Reviewers);
                     break;
 
                 default:
-                    FilterdCourses = CoursesQuery;
+                    FilteredCourses = CoursesQuery;
                     break;
             }
 
-            return FilterdCourses;
+            return FilteredCourses;
         }
 
         public IEnumerable<Course> ReadAll()
         {
-            return context.Courses.Include(c => c.category).Include(c => c.trainer);
+            return context.Courses.Include(c => c.Category).Include(c => c.Trainer)?.ToList();
         }   
         
         public IEnumerable<Course> GetTrainerCourses(int? id)
         {
-            return context.Courses.Where(c=>c.TrainerId == id);
+            return context.Courses.Where(c => c.TrainerId == id)?.ToList();
         }
        
 

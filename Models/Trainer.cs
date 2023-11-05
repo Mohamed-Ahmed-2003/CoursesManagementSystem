@@ -17,11 +17,10 @@ namespace CoursesManagementSystem.Models
         [EmailAddress]
         public string Email { get; set; }
         public string Description { get; set; }
-
-        [MaxLength(250)]
-        [Url]
-        public string Website { get; set; }
+        public string Expertise { get; set; }
+        public string SocialLinks { get; set; }
         public DateTime AddedDate { get; set; }
+
         public virtual ICollection<Course> courses { get; set; }
 
     }

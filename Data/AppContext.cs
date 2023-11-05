@@ -21,10 +21,22 @@ namespace CoursesManagementSystem.Data
             var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(context));
             var userManager = new UserManager<MyIdentityUser>(new UserStore<MyIdentityUser>(context));
 
-            // Create the Administrator role if it doesn't exist
+            // Create the  roles if it doesn't exist
             if (!roleManager.RoleExists("Admin"))
             {
                 var role = new IdentityRole("Admin");
+                roleManager.Create(role);
+            }   
+            
+            if (!roleManager.RoleExists("Trainer"))
+            {
+                var role = new IdentityRole("Trainer");
+                roleManager.Create(role);
+            }    
+            
+            if (!roleManager.RoleExists("Trainee"))
+            {
+                var role = new IdentityRole("Trainee");
                 roleManager.Create(role);
             }
 
@@ -74,6 +86,7 @@ namespace CoursesManagementSystem.Data
         public DbSet<Course>Courses { get; set; }
         public DbSet<Trainer> Trainers { get; set; }
         public DbSet<Trainee> Trainees { get; set; }
+        public DbSet<TraineeCourse> TraineeCourses { get; set; }
         public DbSet<Lesson> Lessons { get; set; }
         public DbSet<Category> Categories { get; set; }
         public DbSet<Admin> Admins{ get; set; }

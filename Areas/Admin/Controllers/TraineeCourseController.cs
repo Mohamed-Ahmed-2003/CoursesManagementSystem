@@ -13,8 +13,14 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
     public class TraineeCourseController : Controller
     {
         private TraineeCourseService _service = new TraineeCourseService();
-        // GET: Admin/TraineeCourse
-        public ActionResult Index(int? id )
+        // GET: Admin/TraineesCourse
+        public ActionResult TraineeCourses(int id)
+        {
+            return View(_service.GetCoursesByTraineeID(id));
+        } 
+        
+   
+        public ActionResult TraineesCourse(int? id )
         {
             IEnumerable<Trainee> trainees;
 
@@ -34,5 +40,7 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
             if (!trainees.Any()) ViewBag.Error = $"There Are No Trainees yet";
             return View(trainees);
         }
+
+
     }
 }

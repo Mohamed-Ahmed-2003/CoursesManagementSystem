@@ -65,7 +65,7 @@ namespace CoursesManagementSystem.Areas.Admin.Controllers
                 _sectionService.Remove(section);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Details","Course",new { Id = section.CourseId});
         }
 
         // GET: Admin/Section/Update/5

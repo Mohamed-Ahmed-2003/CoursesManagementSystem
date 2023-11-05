@@ -6,6 +6,7 @@ using System.Linq;
 using System.Web;
 using System.Web.ModelBinding;
 using System.Data.Entity;
+using Microsoft.Ajax.Utilities;
 
 namespace CoursesManagementSystem.Services.Interfaces
 {
@@ -13,6 +14,12 @@ namespace CoursesManagementSystem.Services.Interfaces
     {
         public static MyAppContext context = new MyAppContext();
 
+        public Category GetCategoryByName (string categoryName)
+        {
+            var category = context.Categories.FirstOrDefault(c => c.Name ==  categoryName);
+
+            return category;
+        }
         public bool Add(Category category)
         {
             if (context.Categories.FirstOrDefault(c => c.Name.ToLower() == category.Name.ToLower()) != default)
@@ -27,18 +34,26 @@ namespace CoursesManagementSystem.Services.Interfaces
             var category = GetCategory(Id);
             if (category != null)
             {
+                var coursesToUpdate = context.Courses.Where(c => c.CategoryId == Id);
+
+                foreach (var course in coursesToUpdate)
+                {
+                    course.CategoryId = null;
+                }
+
                 context.Categories.Remove(category);
                 context.SaveChanges();
             }
         }
 
-        public Category GetCategory(int id)
+
+        public Category GetCategory(int? id)
         {
             var category = context.Categories.Find(id);
             return category;
         }
 
-        public List<Category> GetParentCategoriesById(int categoryId)
+        public List<Category> GetParentCategoriesById(int? categoryId)
         {
             var parentCategories = new Stack<Category>();
             Category category;
@@ -55,14 +70,14 @@ namespace CoursesManagementSystem.Services.Interfaces
             }
             while (category?.ParentId != null);
 
-            return parentCategories.ToList();
+            return parentCategories?.ToList();
         }
 
         public List<Category> ReadAll()
         {
             return context.Categories
                 .Include(c => c.ParentCategory) // Include the ParentCategory navigation property
-                .ToList();
+               ?.ToList();
         }
 
 

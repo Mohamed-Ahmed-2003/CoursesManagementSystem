@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-
+using System.Data.Entity;
 namespace CoursesManagementSystem.Services
 {
     public class TrainerService : ITrainerService
@@ -28,9 +28,14 @@ namespace CoursesManagementSystem.Services
             context.SaveChanges();
         }
 
+        public Trainer GetTrainerByEmail(string email )
+        {
+
+            return context.Trainers.Include(t=>t.courses).FirstOrDefault(t=>t.Email == email);
+        }
         public Trainer GetTrainerById(int id)
         {
-            return context.Trainers.Find(id);
+            return context.Trainers.Include(t=>t.courses).FirstOrDefault(t=>t.Id == id);
         }
 
         public bool IsEmailExisted(string email)
@@ -43,7 +48,7 @@ namespace CoursesManagementSystem.Services
 
         public IEnumerable<Trainer> ReadAll()
         {
-            return context.Trainers;
+            return context.Trainers?.ToList();
         }
 
         public bool Update(int id ,Trainer modifiedtrainer)
@@ -59,13 +64,23 @@ namespace CoursesManagementSystem.Services
                 oldTrainer.Email = modifiedtrainer.Email;
             }
 
-                oldTrainer.Website = modifiedtrainer.Website;
+                oldTrainer.SocialLinks = modifiedtrainer.SocialLinks;
                 oldTrainer.Description = modifiedtrainer.Description;
             context.SaveChanges();
 
             return true;
         }
+        public (int, int) TrainerStats(int trainerID)
+        {
+            int traineesCount = context.TraineeCourses
+                .Count(tc => tc.Course.TrainerId == trainerID);
 
-     
+            int reviews = context.TraineeCourses
+                .Where(tc => tc.Course.TrainerId == trainerID && tc.Rating != null)
+                .Count();
+
+            return (traineesCount, reviews);
+        }
+
     }
 }

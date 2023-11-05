@@ -14,7 +14,9 @@ namespace CoursesManagementSystem.Models
         public string Title { get; set; }
         public int  SectionId { get; set; }
         [Required]
-        public double Duration { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number.")]
+        public int Duration { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "The value must be a positive number.")]
         public int  OrderNumber { get; set; }
         [ForeignKey("SectionId")]
         public virtual Section section{ get; set; }

@@ -12,7 +12,7 @@ namespace CoursesManagementSystem.Services.Interfaces
     {
       List<Category> ReadAll ();
         bool Add (Category category);
-        Category GetCategory (int id);
+        Category GetCategory (int? id);
         bool Update (Category category);
         void Delete (int Id);
 

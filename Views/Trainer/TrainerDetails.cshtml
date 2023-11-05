@@ -1,0 +1,77 @@
+﻿@model CoursesManagementSystem.ViewModels.TrainerViewModel
+
+@{
+    ViewBag.Title = "TrainerDetails";
+}
+<div class="container p-5">
+    <div class="profile-page">
+        <div class="d-flex justify-content-around flex-wrap ">
+            <div>
+                <div class="avatar">
+                    <img style="width: 250px; height: 250px; border-radius: 50%;" class="object-fit-cover shadow "
+                         src="~/Uploads/Courses/no-image.png" alt="Profile Image">
+                </div>
+                <div class="name mt-3 border-bottom d-inline-block p-2">
+                    <h1 style="font-size:2rem">@Model.trainer.Name</h1>
+                    <h4 class="text-black-50">Instructor</h4>
+                </div>
+                <div class="social-links mt-3">
+                    <a href="#" class="btn btn-just-icon btn-link ">
+                        <i class="fa fa-github fa-2x"></i>
+                    </a> 
+                    
+                    <a href="#" class="btn btn-just-icon btn-link ">
+                        <i class="fa fa-linkedin fa-2x"></i>
+                    </a> 
+                    
+                    <a href="#" class="btn btn-just-icon btn-link ">
+                        <i class="ti ti-world fa-2x"></i>
+                    </a>
+                </div>
+            </div>
+
+            <div class="col-md-2 mr-auto ml-auto stats">
+                <h4 class="title">Stats</h4>
+                <ul class="list-unstyled">
+                    <li><h4 class="fw-bolder">@ViewBag.TraineesCount</h4> <h4 class="text-black-50 ">Enrolled Students</h4></li>
+                    <li><h4 class="fw-bolder">@ViewBag.Reviews</h4> <h4 class="text-black-50 ">Reviews</h4></li>
+
+                </ul>
+                <hr>
+                <h4 class="title">About his Work</h4>
+                <p class="description">@Model.trainer.Description</p>
+                <hr>
+                <h4 class="title">Focus</h4>
+                <p class="description">@Model.trainer.Expertise</p>
+
+                <span class="badge badge-primary">Footwear</span>
+                <span class="badge badge-rose">Luxury</span>
+            </div>
+        </div>
+
+        <ul class="nav nav-pills mb-3 mt-5 d-flex flex-wrap justify-content-center">
+            <li class="nav-item">
+                <a class="nav-link active" id="courses-tab" data-toggle="tab" href="#courses">My Courses</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" id="posts-tab" data-toggle="tab" href="#posts">Posts</a>
+            </li>
+        </ul>
+
+        <div class="tab-content mt-2">
+            <div class="tab-pane fade show active" id="courses">
+                <!-- Content for the Courses tab -->
+                <h2>Courses</h2>
+                @Html.Partial("_CourseCard1",Model.trainer.courses)
+                </div>
+                <div class="tab-pane fade" id="posts">
+                    <!-- Content for the Posts tab -->
+                    <h2>Posts</h2>
+                    <p>Coming soon...</p>
+                </div>
+            </div>
+    </div>
+
+
+</div>
+

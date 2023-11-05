@@ -29,7 +29,8 @@ namespace CoursesManagementSystem.Services
 
         public IEnumerable<Section> ReadAll(int ?Id)
         {
-            return context.Sections.Where(s=>s.CourseId == Id).Include(s=>s.Lessons).ToList();
+            return context.Sections.Where(s=>s.CourseId == Id).Include(s=>s.Lessons)?.ToList();
+                ;
         }
 
         public void Remove(Section section)

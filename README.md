@@ -86,3 +86,4 @@ roviding a seamless experience for administrators, instructors, and trainees.
     - Integrate external APIs for additional functionality (payment gateways, external authentication, etc.).
 
 # test
+   http://moacademy.somee.com/
